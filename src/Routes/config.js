@@ -14,8 +14,8 @@ export const USER_EDIT_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/users/${id}/
 
 // Websites manage pages
 export const WEBSITE_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/websites`;
-export const WEBSITE_EDIT_PAGE = `${DASHBOARD_HOME_PAGE}/websites/:id/edit`;
-export const WEBSITE_EDIT_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/websites/${id}/edit`;
+export const WEBSITE_CONFIG_PAGE = `${DASHBOARD_HOME_PAGE}/websites/:id/config`;
+export const WEBSITE_CONFIG_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/websites/${id}/config`;
 
 // Searches manage pages
 export const SEARCH_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/searches`;

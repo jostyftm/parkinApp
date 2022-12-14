@@ -7,18 +7,18 @@ export const AuthContextProvider = ({children}) => {
 
     const [isLoadingPermissions, setIsLoadingPermissions] = useState(false);
     const [isCheckingSesion, setIsCheckingSesion] = useState(true);
-    const [isLogged, setIsLogged] = useState(true);
+    const [isLogged, setIsLogged] = useState(false);
     const [userLogged, setUserLogged] = useState({});
     const [permissions, setPermissions] = useState([])
 
     const getUserAuth = async () => {
 
-        // const data = await getSession();
+        const data = await getSession();
 
-        // if(data.user){
-        //     setIsLogged(true);
-        //     setUserLogged(data.user);
-        // }
+        if(data.user){
+            setIsLogged(true);
+            setUserLogged(data.user);
+        }
 
         setIsCheckingSesion(false);
     }

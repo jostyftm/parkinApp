@@ -9,9 +9,12 @@ import PrivateRouteMiddleware from '../Middlewares/Auth/PrivateRoute';
 import PublicRouteMiddleware from '../Middlewares/Auth/PublicRoute';
 import LoginPage from '../Pages/Auth/LoginPage';
 import HomePageDashboard from '../Pages/Dashboard/Home';
+import SearchListPage from '../Pages/Dashboard/Seacrhes/List';
+import UserListPage from '../Pages/Dashboard/Users/List';
 import WebsiteListPage from '../Pages/Dashboard/Websites';
+import WebsiteConfigPage from '../Pages/Dashboard/Websites/config';
 import HomePage from '../Pages/HomePage';
-import { DASHBOARD_HOME_PAGE, HOME_PAGE, LOGIN_PAGE, RESOURCE_EDIT_PAGE_ROUTE, WEBSITE_LIST_PAGE } from './config';
+import { DASHBOARD_HOME_PAGE, HOME_PAGE, LOGIN_PAGE, RESOURCE_EDIT_PAGE_ROUTE, SEARCH_LIST_PAGE, USER_LIST_PAGE, WEBSITE_CONFIG_PAGE, WEBSITE_LIST_PAGE } from './config';
 
 const MyRoutes = () => {
     
@@ -48,6 +51,9 @@ const MyRoutes = () => {
                 >
                     <Route index element={<HomePageDashboard />} />
                     <Route path={WEBSITE_LIST_PAGE} element={<WebsiteListPage />} />
+                    <Route path={SEARCH_LIST_PAGE} element={<SearchListPage />} />
+                    <Route path={USER_LIST_PAGE} element={<UserListPage />} />
+                    <Route path={WEBSITE_CONFIG_PAGE} element={<WebsiteConfigPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

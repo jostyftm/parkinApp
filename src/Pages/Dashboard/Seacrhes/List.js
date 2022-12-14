@@ -1,52 +1,70 @@
-import React, { useEffect, useState } from "react";
-import {Link} from 'react-router-dom';
-
+import React, { useEffect, useState } from 'react';
+import SearchCreateModal from '../../../Components/Search/Create';
+import Panel from '../../../Components/Shared/Panel';
+import { getAllSearches } from '../../../Services/searchServices';
+import { getAllWebsites } from '../../../Services/websiteServices';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import { faEllipsisH,} from "@fortawesome/free-solid-svg-icons"
-import Panel from "../../../Components/Shared/Panel";
+import SearchEditModal from '../../../Components/Search/Edit';
 
-import { getAllWebsites } from "../../../Services/websiteServices";
-import WebsiteEditModal from "../../../Components/Website/Edit";
-import WebsiteCreateModal from "../../../Components/Website/Create";
-import { WEBSITE_CONFIG_PAGE_ROUTE } from "../../../Routes/config";
+const SearchListPage = () => {
 
-const WebsiteListPage = () => {
-
-    const [websites, setWebsites] = useState([]);
-    const [websiteSelected, setWebsiteSelected] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [websites, setWebsites] = useState([]);
+    const [searches, setSearches] = useState([]);
+    const [searchSelected, setSearchSeledted] = useState('');
 
     const fetchWebsites = async () => {
 
-        setIsLoading(true);
-
         try{
-            const responseWebsite = await getAllWebsites();
 
-            setWebsites(responseWebsite.data);
-            console.log(responseWebsite);
+            const response = await getAllWebsites();
+            setWebsites(response.data);
+
         }catch(err){
 
         }
     }
 
+    const fetchSearches = async () =>{
+       
+    
+        setIsLoading(true);
+        
+        try{
+            
+            const response = await getAllSearches();
+            setSearches(response.data);
+
+            setIsLoading(false);
+        }catch(err){
+            setIsLoading(false);
+
+        }
+    }
+
+
     useEffect(() => {
 
+        fetchSearches();
         fetchWebsites();
-        
-    }, []);
 
+        return () => {
+            setWebsites([]);
+            setSearches([]);
+        }
+    }, []);
 
     return(
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h1>Sitios webs</h1>
+                <h1>Busquedas</h1>
                 <button 
                     className="btn btn-sm btn-primary"
                     data-bs-toggle="modal" 
-                    data-bs-target="#modalAddWebsite"
+                    data-bs-target="#modalAddSearch"
                 >
-                    Nuevo sitio
+                    Nueva busqueda
                 </button>
             </div>
             <Panel>
@@ -58,23 +76,23 @@ const WebsiteListPage = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Estado</th>
-                                <th>Url</th>
+                                <th>Consulta</th>
+                                {/* <th>Estado</th> */}
+                                <th>Sitio web</th>
                                 <th>Fecha de creación</th>
                                 <th>Fecha de actualización</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {websites?.map((website, index) => (
+                            {searches?.map((search, index) => (
                                 <tr key={index}>
-                                    <td>{website.id}</td>
-                                    <td>{website.name}</td>
-                                    <td>{website.state}</td>
-                                    <td><span className="badge bg-primary">{website.url}</span></td>
-                                    <td>{website.created_at}</td>
-                                    <td>{website.updated_at}</td>
+                                    <td>{search.id}</td>
+                                    <td>{search.query}</td>
+                                    {/* <td>{search.is_active}</td> */}
+                                    <td><span className="badge bg-primary">{search.website?.url}</span></td>
+                                    <td>{search.created_at}</td>
+                                    <td>{search.updated_at}</td>
                                     <td>
                                         <div className="dropdown">
                                             <button
@@ -95,31 +113,21 @@ const WebsiteListPage = () => {
                                                     <button
                                                         className="dropdown-item text-default"
                                                         data-bs-toggle="modal" 
-                                                        data-bs-target="#modalEditWebsite"
-                                                        onClick={(e) => setWebsiteSelected(website.id)}
+                                                        data-bs-target="#modalEditSearch"
+                                                        onClick={(e) => setSearchSeledted(search.id)}
                                                     >
-                                                        {/* <FontAwesomeIcon icon={faEdit} className="me-2" /> */}
-                                                        Editar sitio web
+                                                        
+                                                        Editar busqueda
                                                     </button>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        className="dropdown-item"
-                                                        to={WEBSITE_CONFIG_PAGE_ROUTE(website.id)}
-                                                    >
-                                                        {/* <FontAwesomeIcon icon={faEdit} className="me-2" /> */}
-                                                        Configurar sitio web
-                                                    </Link>
                                                 </li>
                                                 <li>
                                                     <button
                                                         className="dropdown-item text-danger"
                                                         data-bs-toggle="modal" 
-                                                        data-bs-target="#modalDeleteClient"
-                                                        onClick={(e) => setWebsiteSelected(website.id)}
+                                                        data-bs-target="#modalDeleteSearch"
+                                                        onClick={(e) => setSearchSeledted(search.id)}
                                                     >
-                                                        {/* <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> */}
-                                                        Eliminar sitio web
+                                                        Eliminar busqueda
                                                     </button>
                                                 </li>
                                             </ul>
@@ -130,18 +138,20 @@ const WebsiteListPage = () => {
                         </tbody>
                     </table>
                 </div>
-                <WebsiteEditModal 
-                    id="modalEditWebsite"
-                    webisteId={websiteSelected}
-                    onUpdate={(result) => {if(result){fetchWebsites()}}}
-                />
-                <WebsiteCreateModal
-                    id="modalAddWebsite"
-                    onCreate={(result) => {if(result){fetchWebsites()}}}
+                <SearchCreateModal
+                    id="modalAddSearch"
+                    websites={websites}
+                    onCreate={(result) => {if(result){fetchSearches()}}}
+                    /> 
+                <SearchEditModal 
+                    id="modalEditSearch"
+                    websites={websites}
+                    searchId={searchSelected}
+                    onUpdate={(result) => {if(result){fetchSearches()}}}
                 />
             </Panel>
         </>
     );
 }
 
-export default WebsiteListPage;
+export default SearchListPage;

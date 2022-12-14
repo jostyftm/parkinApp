@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 // Components
 import Panel from '../../Components/Shared/Panel';
+import { login } from "../../Services/authService";
+import { saveUserSession } from "../../Utils/AuthUtils";
 
 const LoginPage = () => {
 
@@ -17,6 +19,22 @@ const LoginPage = () => {
 
         e.preventDefault();
 
+        setErrors([]);
+        setIsLoading(true);
+        try{
+            
+            const formData = new FormData(formLoginRef.current);
+            const response = await login(formData);
+
+            setIsLoading(false);
+            saveUserSession(response.data);
+            window.location.reload();
+        }catch(err){
+            setIsLoading(false);
+
+            if(err.status === 422)
+                setErrors(err.data.errors);
+        }
     }
 
     useEffect(() => {
@@ -75,7 +93,7 @@ const LoginPage = () => {
                                     disabled={isLoading}
                                     type="submit"
                                 >
-                                    {isLoading ? 'Iniciando sesión' : 'Iniciar sesión'}
+                                    {isLoading ? 'Iniciando ' : 'Iniciar '} sesión
                                 </button>
                             </div>
                         </form>
