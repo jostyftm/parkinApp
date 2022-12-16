@@ -184,6 +184,26 @@ const WebsiteConfigPage = () => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="form-floating mb-3">
+                                            <input 
+                                                type="text" 
+                                                className={errors && errors.tag_resource_list_posts ? `form-control is-invalid` : `form-control`}  
+                                                id="floatingInputName" 
+                                                name='tag_resource_list_posts'
+                                                placeholder="algo para buscar..."
+                                                defaultValue={websiteConfig.tag_resource_list_posts}
+                                            />
+                                            <label htmlFor="floatingInputName">Et. contenedora de recursos</label>
+                                            {errors && errors.tag_resource_list_posts &&(
+                                                <div className="invalid-feedback">
+                                                    {errors.tag_resource_list_posts}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             </Panel>
                             <Panel>
                                 <div className="row">
