@@ -2,7 +2,7 @@ import axios from "axios";
 import {
     API_URL
 } from '../Config/enviroments';
-import { TOKEN_AUTH } from "../Config/session";
+import { AUTH_USER, TOKEN_AUTH } from "../Config/session";
 import { getValue } from "../Utils/AuthUtils";
 
 
@@ -17,10 +17,13 @@ service.interceptors.request.use(
     config => {
 
         const token = getValue(TOKEN_AUTH);
+        const userAuth = JSON.parse(getValue(AUTH_USER));
 
         if(token){
             config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['userAuth'] = userAuth.id;
         }
+        
 
         config.headers['Content-Type'] = 'application/json';
 

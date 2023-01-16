@@ -12,22 +12,12 @@ export const USER_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/users`;
 export const USER_EDIT_PAGE = `${DASHBOARD_HOME_PAGE}/users/:id/edit`;
 export const USER_EDIT_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/users/${id}/edit`;
 
-// Websites manage pages
-export const WEBSITE_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/websites`;
-export const WEBSITE_CONFIG_PAGE = `${DASHBOARD_HOME_PAGE}/websites/:id/config`;
-export const WEBSITE_CONFIG_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/websites/${id}/config`;
+// Client manage page
+export const CLIENT_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/clients`;
 
-// Searches manage pages
-export const SEARCH_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/searches`;
-export const SEARCH_EDIT_PAGE = `${DASHBOARD_HOME_PAGE}/searches/:id/edit`;
-export const SEARCH_EDIT_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/searches/${id}/edit`;
+// Reservations manage pages
+export const RESERVATION_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/reservations`;
+export const RESERVATION_CREATE_PAGE = `${DASHBOARD_HOME_PAGE}/reservations/new`;
 
-// Resources manage pages
-export const RESOURCE_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/resources`;
-export const RESOURCE_EDIT_PAGE = `${DASHBOARD_HOME_PAGE}/resources/:id/edit`;
-export const RESOURCE_EDIT_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/resources/${id}/edit`;
-
-// Keywords
-export const KEYWORD_LIST_PAGE = `${DASHBOARD_HOME_PAGE}/keywords`;
-export const KEYWORD_EDIT_PAGE = `${DASHBOARD_HOME_PAGE}/keywords/:id`;
-export const KEYWORD_EDIT_PAGE_ROUTE = (id) => `${DASHBOARD_HOME_PAGE}/keywords/${id}`;
+// Statistics
+export const STATISTICS_HOME = `${DASHBOARD_HOME_PAGE}/statistics`;

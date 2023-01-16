@@ -1,36 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
 import { allIdentificationTypes } from "../../Services/idenfitifacionTypeService";
-import { saveUser } from "../../Services/userServices";
+import { getUser, saveUser, updateUser } from "../../Services/userServices";
 import Modal from "../Shared/Modal";
 
-const UserCreateModal = ({onCreate,...rest}) => {
+const UserEditModal = ({userId, onUpdate,...rest}) => {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [user, setUser] = useState({});
     const [iTypes, setIdentificationTypes] = useState([]);
 
     const [errors, setErrors] = useState([]);
     
-    const formCreateUserRef = useRef(null);
+    const formUpdateUserRef = useRef(null);
 
     const handleCreateUSer = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);
+        setIsUpdating(true);
         setErrors([]);
         try{
-            const formData = new FormData(formCreateUserRef.current);
-
-            await saveUser(formData);
+            const formData = new FormData(formUpdateUserRef.current);
+            let data = {};
+            formData.forEach((value, key) => data[key] = value);
+            
+            await updateUser(userId, formData);
 
             document.querySelectorAll(".btn-close").forEach(element => element.click());
-            formCreateUserRef.current.reset();
-            onCreate(true);
-            setIsLoading(false);
+            formUpdateUserRef.current.reset();
+            onUpdate(true);
+            setIsUpdating(false);
         }catch(err){
-            onCreate(false);
-            setIsLoading(false);
+            onUpdate(false);
+            setIsUpdating(false);
 
-            console.log(err);
             if(err.status === 422){
                 setErrors(err.data.errors);
             }
@@ -41,24 +44,28 @@ const UserCreateModal = ({onCreate,...rest}) => {
 
         setIsLoading(true);
         try{
+            const responseUser = await getUser(userId)
             const responseIType = await allIdentificationTypes();
 
+            setUser(responseUser.data);
             setIdentificationTypes(responseIType.data);
 
         }catch(err){
-            console.log(err)
+            
         }
         setIsLoading(false);
     };
 
     useEffect(() => {
 
-        fetchData();
+        if(userId){
+            fetchData();
+        }
 
         return () => {
             setIdentificationTypes([]);
         }
-    }, []);
+    }, [userId]);
 
     return (
         <Modal
@@ -67,7 +74,7 @@ const UserCreateModal = ({onCreate,...rest}) => {
             {...rest}
         >
             <form
-                ref={formCreateUserRef}
+                ref={formUpdateUserRef}
                 onSubmit={(e) => handleCreateUSer(e)}
             >
                 <div className="row mb-3">
@@ -76,11 +83,11 @@ const UserCreateModal = ({onCreate,...rest}) => {
                             <input 
                                 type="text" 
                                 className={errors && errors.name ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputName" 
+                                id="floatingInputNameUpdate" 
                                 name='name'
-                                placeholder="name@example.com"
+                                defaultValue={user.name}
                             />
-                            <label htmlFor="floatingInputName">Nombre</label>
+                            <label htmlFor="floatingInputNameUpdate">Nombre</label>
                             {errors && errors.name &&(
                                 <div className="invalid-feedback">
                                     {errors.name}
@@ -93,11 +100,11 @@ const UserCreateModal = ({onCreate,...rest}) => {
                             <input 
                                 type="text" 
                                 className={errors && errors.last_name ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputLastName" 
+                                id="floatingInputLastNameUpdate" 
                                 name='last_name'
-                                placeholder="name@example.com"
+                                defaultValue={user.last_name}
                             />
-                            <label htmlFor="floatingInputLastName">Apellidos</label>
+                            <label htmlFor="floatingInputLastNameUpdate">Apellidos</label>
                             {errors && errors.last_name &&(
                                 <div className="invalid-feedback">
                                     {errors.last_name}
@@ -112,6 +119,8 @@ const UserCreateModal = ({onCreate,...rest}) => {
                             <select
                                 className={errors && errors.identification_type_id ? `form-select is-invalid` : `form-select`}  
                                 name="identification_type_id"
+                                value={user.identification_type_id}
+                                onChange={(e) => setUser({...user, identification_type_id:e.target.value})}
                             >
                                 <option value="">-Selecione una opción-</option>
                                 {iTypes && iTypes.map((type, index) => (
@@ -132,7 +141,7 @@ const UserCreateModal = ({onCreate,...rest}) => {
                                 className={errors && errors.identification_number ? `form-control is-invalid` : `form-control`}  
                                 type="text"
                                 name="identification_number"
-                                placeholder="identificación"
+                                defaultValue={user.identification_number}
                             />
                             <label className='form-label'>Identificación</label>
                             {errors && errors.identification_number &&(
@@ -149,11 +158,11 @@ const UserCreateModal = ({onCreate,...rest}) => {
                             <input 
                                 type="email" 
                                 className={errors && errors.email ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputEmail" 
+                                id="floatingInputEmailUpdate" 
                                 name='email'
-                                placeholder="www.google.com"
+                                defaultValue={user.email}
                             />
-                            <label htmlFor="floatingInputEmail">email</label>
+                            <label htmlFor="floatingInputEmailUpdate">email</label>
                             {errors && errors.email &&(
                                 <div className="invalid-feedback">
                                     {errors.email}
@@ -162,49 +171,13 @@ const UserCreateModal = ({onCreate,...rest}) => {
                         </div>
                     </div>
                 </div>
-                <div className="row nb-3">
-                <div className="col">
-                        <div className="form-floating mb-3">
-                            <input 
-                                type="password" 
-                                className={errors && errors.password ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputPassword" 
-                                name='password'
-                                placeholder="********"
-                            />
-                            <label htmlFor="floatingInputPassword">Contraseña</label>
-                            {errors && errors.password &&(
-                                <div className="invalid-feedback">
-                                    {errors.password}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="form-floating mb-3">
-                            <input 
-                                type="password" 
-                                className={errors && errors.password_confirmation ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputPasswordConfirmation" 
-                                name='password_confirmation'
-                                placeholder="¨*******"
-                            />
-                            <label htmlFor="floatingInputPasswordConfirmation">Confirmar contraseña</label>
-                            {errors && errors.password_confirmation &&(
-                                <div className="invalid-feedback">
-                                    {errors.password_confirmation}
-                                </div>
-                            )}
-                        </div>
-                    </div>        
-                </div>
                 <div className="d-grid gap-2 mx-auto">
                     <button 
                         type="submit"
                         className="btn btn-primary"
-                        disabled={isLoading}
+                        disabled={isLoading || isUpdating}
                     >
-                        {isLoading ? 'Creando': 'Crear'} usuario
+                        {isUpdating ? 'Actualizando': 'Actualizar'} usuario
                     </button>
                     <button 
                         type='button'
@@ -219,4 +192,4 @@ const UserCreateModal = ({onCreate,...rest}) => {
     );
 }
 
-export default UserCreateModal;
+export default UserEditModal;

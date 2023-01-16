@@ -8,13 +8,14 @@ import DefaultLayout from '../Layouts/DefaultLayout';
 import PrivateRouteMiddleware from '../Middlewares/Auth/PrivateRoute';
 import PublicRouteMiddleware from '../Middlewares/Auth/PublicRoute';
 import LoginPage from '../Pages/Auth/LoginPage';
+import ClientListPage from '../Pages/Dashboard/Clients/List';
 import HomePageDashboard from '../Pages/Dashboard/Home';
-import SearchListPage from '../Pages/Dashboard/Seacrhes/List';
+import ReservationCreatePage from '../Pages/Dashboard/Reservations/Create';
+import ReservationListPage from '../Pages/Dashboard/Reservations/List';
+import StatisticsHomePage from '../Pages/Dashboard/Statistics/Home';
 import UserListPage from '../Pages/Dashboard/Users/List';
-import WebsiteListPage from '../Pages/Dashboard/Websites';
-import WebsiteConfigPage from '../Pages/Dashboard/Websites/config';
 import HomePage from '../Pages/HomePage';
-import { DASHBOARD_HOME_PAGE, HOME_PAGE, LOGIN_PAGE, RESOURCE_EDIT_PAGE_ROUTE, SEARCH_LIST_PAGE, USER_LIST_PAGE, WEBSITE_CONFIG_PAGE, WEBSITE_LIST_PAGE } from './config';
+import { CLIENT_LIST_PAGE, DASHBOARD_HOME_PAGE, HOME_PAGE, LOGIN_PAGE, RESERVATION_CREATE_PAGE, RESERVATION_LIST_PAGE, SEARCH_LIST_PAGE, STATISTICS_HOME, USER_LIST_PAGE} from './config';
 
 const MyRoutes = () => {
     
@@ -50,10 +51,11 @@ const MyRoutes = () => {
                     }
                 >
                     <Route index element={<HomePageDashboard />} />
-                    <Route path={WEBSITE_LIST_PAGE} element={<WebsiteListPage />} />
-                    <Route path={SEARCH_LIST_PAGE} element={<SearchListPage />} />
                     <Route path={USER_LIST_PAGE} element={<UserListPage />} />
-                    <Route path={WEBSITE_CONFIG_PAGE} element={<WebsiteConfigPage />} />
+                    <Route path={CLIENT_LIST_PAGE} element={<ClientListPage />} />
+                    <Route path={RESERVATION_LIST_PAGE} element={<ReservationListPage />} />
+                    <Route path={RESERVATION_CREATE_PAGE} element={<ReservationCreatePage />} />
+                    <Route path={STATISTICS_HOME} element={<StatisticsHomePage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import CustomLink from "../Components/Shared/CustomLink";
-import { DASHBOARD_HOME_PAGE, KEYWORD_LIST_PAGE, RESOURCE_LIST_PAGE, SEARCH_LIST_PAGE, USER_LIST_PAGE, WEBSITE_LIST_PAGE } from "../Routes/config";
+import { CLIENT_LIST_PAGE, DASHBOARD_HOME_PAGE, RESERVATION_LIST_PAGE, STATISTICS_HOME, USER_LIST_PAGE} from "../Routes/config";
 
 import useAuth from '../Hooks/UseAuth';
 import { removeUserSession } from "../Utils/AuthUtils";
@@ -39,24 +39,19 @@ const DashboardLayout = () => {
                                 Usuarios
                             </CustomLink>
                             <CustomLink
-                                to={WEBSITE_LIST_PAGE}
+                                to={CLIENT_LIST_PAGE}
                             >
-                                Sistios web
+                                Clientes
                             </CustomLink>
                             <CustomLink
-                                to={SEARCH_LIST_PAGE}
+                                to={RESERVATION_LIST_PAGE}
                             >
-                                Busquedas
+                                Reservaciones
                             </CustomLink>
                             <CustomLink
-                                to={RESOURCE_LIST_PAGE}
+                                to={STATISTICS_HOME}
                             >
-                                Recursos
-                            </CustomLink>
-                            <CustomLink
-                                to={KEYWORD_LIST_PAGE}
-                            >
-                                Palabras claves
+                                Estadisticas
                             </CustomLink>
                         </ul>
                     </div>

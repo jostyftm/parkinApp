@@ -1,52 +1,52 @@
 import React, { useEffect, useState } from "react";
-import {Link} from 'react-router-dom';
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import { faEllipsisH,} from "@fortawesome/free-solid-svg-icons"
+
 import Panel from "../../../Components/Shared/Panel";
 
-import { getAllWebsites } from "../../../Services/websiteServices";
-import WebsiteEditModal from "../../../Components/Website/Edit";
-import WebsiteCreateModal from "../../../Components/Website/Create";
-import { WEBSITE_CONFIG_PAGE_ROUTE } from "../../../Routes/config";
+import { getAllClients } from "../../../Services/clientService";
+import ClientCreateModal from "../../../Components/Clients/Create";
+import ClientEditModal from "../../../Components/User/Edit";
+import UserEditModal from "../../../Components/User/Edit";
 
-const WebsiteListPage = () => {
+const ClientListPage = () => {
 
-    const [websites, setWebsites] = useState([]);
-    const [websiteSelected, setWebsiteSelected] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [clients, setClients] = useState([]);
+    const [userSelected, setUserSelected] = useState('');
 
-    const fetchWebsites = async () => {
+
+    const fetchClients = async () => {
 
         setIsLoading(true);
 
         try{
-            const responseWebsite = await getAllWebsites();
-
-            setWebsites(responseWebsite.data);
-            console.log(responseWebsite);
+            const response = await getAllClients();
+            setClients(response.data);
+            setIsLoading(false);
         }catch(err){
+            setIsLoading(false);
 
         }
     }
 
     useEffect(() => {
 
-        fetchWebsites();
+        fetchClients();
         
-    }, []);
-
+    }, [])
 
     return(
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h1>Sitios webs</h1>
+                <h1>Clientes</h1>
                 <button 
                     className="btn btn-sm btn-primary"
                     data-bs-toggle="modal" 
-                    data-bs-target="#modalAddWebsite"
+                    data-bs-target="#modalCreateUser"
                 >
-                    Nuevo sitio
+                    Nuevo cliente
                 </button>
             </div>
             <Panel>
@@ -59,22 +59,22 @@ const WebsiteListPage = () => {
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>Estado</th>
-                                <th>Url</th>
+                                <th>Identificación</th>
+                                <th>Email</th>
                                 <th>Fecha de creación</th>
                                 <th>Fecha de actualización</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {websites?.map((website, index) => (
+                            {clients?.map((client, index) => (
                                 <tr key={index}>
-                                    <td>{website.id}</td>
-                                    <td>{website.name}</td>
-                                    <td>{website.state}</td>
-                                    <td><span className="badge bg-primary">{website.url}</span></td>
-                                    <td>{website.created_at}</td>
-                                    <td>{website.updated_at}</td>
+                                    <td>{client.user?.id}</td>
+                                    <td>{client.user?.name}</td>
+                                    <td>{`${client.user?.identification_type?.prefix} ${client.user?.identification_number}`}</td>
+                                    <td>{client.user?.email}</td>
+                                    <td>{client.created_at}</td>
+                                    <td>{client.updated_at}</td>
                                     <td>
                                         <div className="dropdown">
                                             <button
@@ -82,7 +82,6 @@ const WebsiteListPage = () => {
                                                 data-bs-toggle="dropdown" 
                                                 aria-expanded="false"
                                                 type="button"
-                                                id="employee"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faEllipsisH}
@@ -95,31 +94,20 @@ const WebsiteListPage = () => {
                                                     <button
                                                         className="dropdown-item text-default"
                                                         data-bs-toggle="modal" 
-                                                        data-bs-target="#modalEditWebsite"
-                                                        onClick={(e) => setWebsiteSelected(website.id)}
+                                                        data-bs-target="#modalEditUser"
+                                                        onClick={(e) => setUserSelected(client.user_id)}
                                                     >
-                                                        {/* <FontAwesomeIcon icon={faEdit} className="me-2" /> */}
-                                                        Editar sitio web
+                                                        Editar cliente
                                                     </button>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        className="dropdown-item"
-                                                        to={WEBSITE_CONFIG_PAGE_ROUTE(website.id)}
-                                                    >
-                                                        {/* <FontAwesomeIcon icon={faEdit} className="me-2" /> */}
-                                                        Configurar sitio web
-                                                    </Link>
                                                 </li>
                                                 <li>
                                                     <button
                                                         className="dropdown-item text-danger"
                                                         data-bs-toggle="modal" 
-                                                        data-bs-target="#modalDeleteClient"
-                                                        onClick={(e) => setWebsiteSelected(website.id)}
+                                                        data-bs-target="#modalDeleteUser"
+                                                        onClick={(e) => setUserSelected(client.user_id)}
                                                     >
-                                                        {/* <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> */}
-                                                        Eliminar sitio web
+                                                        Eliminar cliente
                                                     </button>
                                                 </li>
                                             </ul>
@@ -130,18 +118,22 @@ const WebsiteListPage = () => {
                         </tbody>
                     </table>
                 </div>
-                <WebsiteEditModal 
-                    id="modalEditWebsite"
-                    webisteId={websiteSelected}
-                    onUpdate={(result) => {if(result){fetchWebsites()}}}
+                <ClientCreateModal 
+                    id="modalCreateUser"
+                    onCreate={(data) => {if(data.result){fetchClients()}}}
                 />
-                <WebsiteCreateModal
+                <UserEditModal 
+                    id="modalEditUser"
+                    userId={userSelected}
+                    onUpdate={(result) => {if(result){fetchClients()}}}
+                />
+                {/* <WebsiteCreateModal
                     id="modalAddWebsite"
                     onCreate={(result) => {if(result){fetchWebsites()}}}
-                />
+                /> */}
             </Panel>
         </>
     );
 }
 
-export default WebsiteListPage;
+export default ClientListPage;

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+import { saveClient } from "../../Services/clientService";
 import { allIdentificationTypes } from "../../Services/idenfitifacionTypeService";
-import { saveUser } from "../../Services/userServices";
 import Modal from "../Shared/Modal";
 
-const UserCreateModal = ({onCreate,...rest}) => {
+const ClientCreateModal = ({onCreate,...rest}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [iTypes, setIdentificationTypes] = useState([]);
@@ -20,14 +20,17 @@ const UserCreateModal = ({onCreate,...rest}) => {
         try{
             const formData = new FormData(formCreateUserRef.current);
 
-            await saveUser(formData);
+            const clientSaved = await saveClient(formData);
 
             document.querySelectorAll(".btn-close").forEach(element => element.click());
             formCreateUserRef.current.reset();
-            onCreate(true);
+            onCreate({
+                result:true,
+                data: clientSaved.data
+            });
             setIsLoading(false);
         }catch(err){
-            onCreate(false);
+            onCreate({result:false, data:{}});
             setIsLoading(false);
 
             console.log(err);
@@ -62,7 +65,7 @@ const UserCreateModal = ({onCreate,...rest}) => {
 
     return (
         <Modal
-            title={"Crear usuario"}
+            title={"Crear cliente"}
             modalSize=""
             {...rest}
         >
@@ -219,4 +222,4 @@ const UserCreateModal = ({onCreate,...rest}) => {
     );
 }
 
-export default UserCreateModal;
+export default ClientCreateModal;
