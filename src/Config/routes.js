@@ -1,0 +1,1 @@
+export const PRINT_TICKET_RESERVATION_ROUTE = (reservation) => `${process.env.REACT_APP_LOCAL_URL}`;

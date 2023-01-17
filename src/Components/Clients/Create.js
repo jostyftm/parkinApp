@@ -165,42 +165,6 @@ const ClientCreateModal = ({onCreate,...rest}) => {
                         </div>
                     </div>
                 </div>
-                <div className="row nb-3">
-                <div className="col">
-                        <div className="form-floating mb-3">
-                            <input 
-                                type="password" 
-                                className={errors && errors.password ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputPassword" 
-                                name='password'
-                                placeholder="********"
-                            />
-                            <label htmlFor="floatingInputPassword">Contraseña</label>
-                            {errors && errors.password &&(
-                                <div className="invalid-feedback">
-                                    {errors.password}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="form-floating mb-3">
-                            <input 
-                                type="password" 
-                                className={errors && errors.password_confirmation ? `form-control is-invalid` : `form-control`}  
-                                id="floatingInputPasswordConfirmation" 
-                                name='password_confirmation'
-                                placeholder="¨*******"
-                            />
-                            <label htmlFor="floatingInputPasswordConfirmation">Confirmar contraseña</label>
-                            {errors && errors.password_confirmation &&(
-                                <div className="invalid-feedback">
-                                    {errors.password_confirmation}
-                                </div>
-                            )}
-                        </div>
-                    </div>        
-                </div>
                 <div className="d-grid gap-2 mx-auto">
                     <button 
                         type="submit"

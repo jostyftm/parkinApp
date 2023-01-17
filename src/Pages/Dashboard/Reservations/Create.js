@@ -1,22 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
 import ClientCreateModal from "../../../Components/Clients/Create";
 import Panel from "../../../Components/Shared/Panel";
-import { RESERVATION_LIST_PAGE } from "../../../Routes/config";
+import { PRINT_RESVERATION_IN_ROUTE, RESERVATION_LIST_PAGE } from "../../../Routes/config";
 import { verifyClient } from "../../../Services/clientService";
 import { allIdentificationTypes } from "../../../Services/idenfitifacionTypeService";
 import { allVehicleTypes } from "../../../Services/vehicleTypes";
 import { saveReservation } from "../../../Services/reservationServices";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+
+import useAuth  from '../../../Hooks/UseAuth';
 
 const ReservationCreatePage = () => {
 
     const [iTypes, setIdentificationTypes] = useState([]);
     const [vehicleTypes, setVehicleTypes] = useState([]);
     const [clientSelected, setClientSelected] = useState({});
+    const [reservation, setReservation] = useState({});
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isCreated, setIsCreated] = useState(true);
     const [errors, setErrors] = useState([]);
     
     const formCreateReservationRef = useRef(null);
+
+    const {userLogged} = useAuth();
 
     const handleCreateReservation = async(e) => {
         e.preventDefault();
@@ -28,11 +36,14 @@ const ReservationCreatePage = () => {
             const formData = new FormData(formCreateReservationRef.current);
             formData.append('client_id', clientSelected.client?.id);
 
-            await saveReservation(formData);
+            const response = await saveReservation(formData);
+            
+            setReservation(response.data);
 
-            window.location.href = RESERVATION_LIST_PAGE;
+            setIsCreated(true);
             setIsLoading(false);
         }catch(err){
+            setIsCreated(false);
             setIsLoading(false);
 
             if(err.status === 422){
@@ -222,13 +233,24 @@ const ReservationCreatePage = () => {
                                     </div>
                                 </div>
                                 <div className="d-grid gap-2 mx-auto">
-                                    <button 
-                                        type="submit"
-                                        className="btn btn-primary"
-                                        disabled={isLoading}
-                                    >
-                                        {isLoading ? 'Creando': 'Crear'} reserva
-                                    </button>
+                                    {(isCreated && reservation.id) ? (
+                                        <a 
+                                            className="btn btn-success"
+                                            href={PRINT_RESVERATION_IN_ROUTE(reservation.id, userLogged.id)}
+                                            target={"_blank"}
+                                        >
+                                            <FontAwesomeIcon icon={faPrint} className="me-2" />
+                                            <span>Imprimir Ticket de entrada</span>
+                                        </a>
+                                    ): (
+                                        <button 
+                                            type="submit"
+                                            className="btn btn-primary"
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? 'Creando': 'Crear'} reserva
+                                        </button>
+                                    )}
                                 </div>
                                 </>
                             )}

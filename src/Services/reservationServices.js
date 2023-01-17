@@ -16,3 +16,5 @@ export const updateReservation = (id, data) => requestPut(`${endpoint}/${id}`, d
 export const deleteReservation = (id) => requestDelete(`${endpoint}/${id}`);
 
 export const payReservation = (id) => requestPost(`${endpoint}/${id}/payReservation`);
+
+export const cancelReservation = (id) => requestPost(`${endpoint}/${id}/cancelReservation`);

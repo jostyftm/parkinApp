@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 
 
 // Components
@@ -47,7 +46,7 @@ const LoginPage = () => {
             <div className="row vh-100 align-items-center">
                 <div className="col-md-5 mx-auto">
                     <div className="w-100 text-center mb-4">
-                        {/* <img src={logo} width="240" /> */}
+                        <h2>Parqueadero AVIV</h2>
                     </div>
                     <Panel>
                         <h5 className="text-center">Iniciar sesión</h5>

@@ -15,7 +15,7 @@ import ReservationListPage from '../Pages/Dashboard/Reservations/List';
 import StatisticsHomePage from '../Pages/Dashboard/Statistics/Home';
 import UserListPage from '../Pages/Dashboard/Users/List';
 import HomePage from '../Pages/HomePage';
-import { CLIENT_LIST_PAGE, DASHBOARD_HOME_PAGE, HOME_PAGE, LOGIN_PAGE, RESERVATION_CREATE_PAGE, RESERVATION_LIST_PAGE, SEARCH_LIST_PAGE, STATISTICS_HOME, USER_LIST_PAGE} from './config';
+import { CLIENT_LIST_PAGE, DASHBOARD_HOME_PAGE, EMPLOYEE_LIST_PAGE, HOME_PAGE, LOGIN_PAGE, RESERVATION_CREATE_PAGE, RESERVATION_LIST_PAGE, SEARCH_LIST_PAGE, STATISTICS_HOME, USER_LIST_PAGE} from './config';
 
 const MyRoutes = () => {
     
@@ -51,7 +51,7 @@ const MyRoutes = () => {
                     }
                 >
                     <Route index element={<HomePageDashboard />} />
-                    <Route path={USER_LIST_PAGE} element={<UserListPage />} />
+                    <Route path={EMPLOYEE_LIST_PAGE} element={<UserListPage />} />
                     <Route path={CLIENT_LIST_PAGE} element={<ClientListPage />} />
                     <Route path={RESERVATION_LIST_PAGE} element={<ReservationListPage />} />
                     <Route path={RESERVATION_CREATE_PAGE} element={<ReservationCreatePage />} />

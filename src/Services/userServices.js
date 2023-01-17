@@ -3,7 +3,7 @@ import {
     requestGet, requestPost, requestPut
 } from './Request';
 
-const endpoint = "/users";
+const endpoint = "/employees";
 
 export const getAllUsers = (config) => requestGet(endpoint, config);
 

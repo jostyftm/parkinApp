@@ -9,6 +9,8 @@ import { getAllClients } from "../../../Services/clientService";
 import ClientCreateModal from "../../../Components/Clients/Create";
 import ClientEditModal from "../../../Components/User/Edit";
 import UserEditModal from "../../../Components/User/Edit";
+import Pagination from "../../../Components/Pagination";
+import Moment from 'react-moment';
 
 const ClientListPage = () => {
 
@@ -16,14 +18,25 @@ const ClientListPage = () => {
     const [clients, setClients] = useState([]);
     const [userSelected, setUserSelected] = useState('');
 
+    const [links, setLinks] = useState([]);
+    const [query, setQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchClients = async () => {
 
         setIsLoading(true);
 
         try{
-            const response = await getAllClients();
-            setClients(response.data);
+            const response = await getAllClients({
+                params:{
+                    paginate:true,
+                    page:currentPage,
+                    q:query,
+                    limit:10
+                }
+            });
+            setClients(response.data.data);
+            setLinks(response.data.links);
             setIsLoading(false);
         }catch(err){
             setIsLoading(false);
@@ -35,23 +48,33 @@ const ClientListPage = () => {
 
         fetchClients();
         
-    }, [])
+    }, [query, currentPage])
 
     return(
         <>
             <div className="d-flex justify-content-between align-items-center">
                 <h1>Clientes</h1>
-                <button 
-                    className="btn btn-sm btn-primary"
-                    data-bs-toggle="modal" 
-                    data-bs-target="#modalCreateUser"
-                >
-                    Nuevo cliente
-                </button>
+                
             </div>
             <Panel>
-                <div>
-
+                <div className="d-flex justify-content-between">
+                    <div>
+                        <button 
+                            className="btn btn-sm btn-primary"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalCreateUser"
+                        >
+                            Registrar cliente
+                        </button>
+                    </div>
+                    <div className="input-group mb-3 w-25">
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder="seguro..." 
+                            onChange={(e) =>{setQuery(e.target.value)}}
+                        />
+                    </div>
                 </div>
                 <div>
                     <table className="table">
@@ -73,8 +96,16 @@ const ClientListPage = () => {
                                     <td>{client.user?.name}</td>
                                     <td>{`${client.user?.identification_type?.prefix} ${client.user?.identification_number}`}</td>
                                     <td>{client.user?.email}</td>
-                                    <td>{client.created_at}</td>
-                                    <td>{client.updated_at}</td>
+                                    <td>
+                                        <Moment format="LLL">
+                                            {client.created_at}
+                                        </Moment>
+                                    </td>
+                                    <td>
+                                        <Moment format="LLL">
+                                            {client.updated_at}
+                                        </Moment>
+                                    </td>
                                     <td>
                                         <div className="dropdown">
                                             <button
@@ -100,7 +131,7 @@ const ClientListPage = () => {
                                                         Editar cliente
                                                     </button>
                                                 </li>
-                                                <li>
+                                                {/* <li>
                                                     <button
                                                         className="dropdown-item text-danger"
                                                         data-bs-toggle="modal" 
@@ -109,7 +140,7 @@ const ClientListPage = () => {
                                                     >
                                                         Eliminar cliente
                                                     </button>
-                                                </li>
+                                                </li> */}
                                             </ul>
                                         </div>
                                     </td>
@@ -117,6 +148,15 @@ const ClientListPage = () => {
                             ))}
                         </tbody>
                     </table>
+                    <Pagination 
+                        links={links} 
+                        handleClickPagination={
+                            (e, page) => {
+                                e.preventDefault();
+                                setCurrentPage(page)
+                            }
+                        } 
+                    />
                 </div>
                 <ClientCreateModal 
                     id="modalCreateUser"

@@ -5,6 +5,8 @@ import './Assets/scss/app.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 import App from './App';
+import 'moment';
+import 'moment/locale/es-mx';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './Contexts/AuthContext';
 

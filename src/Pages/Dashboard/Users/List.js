@@ -8,6 +8,8 @@ import UserCreateModal from "../../../Components/User/Create";
 
 import { getAllUsers } from "../../../Services/userServices";
 
+import Moment from 'react-moment';
+
 const UserListPage = () => {
 
     const [isLoading, setIsLoading] = useState(false);
@@ -38,13 +40,13 @@ const UserListPage = () => {
     return(
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h1>Usuarios</h1>
+                <h1>Empleados</h1>
                 <button 
                     className="btn btn-sm btn-primary"
                     data-bs-toggle="modal" 
                     data-bs-target="#modalCreateUser"
                 >
-                    Nuevo usuario
+                    Nuevo empleado
                 </button>
             </div>
             <Panel>
@@ -64,13 +66,21 @@ const UserListPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users?.map((user, index) => (
+                            {users?.map((employee, index) => (
                                 <tr key={index}>
-                                    <td>{user.id}</td>
-                                    <td>{user.name}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.created_at}</td>
-                                    <td>{user.updated_at}</td>
+                                    <td>{employee.user?.id}</td>
+                                    <td>{employee.user?.name}</td>
+                                    <td>{employee.user?.email}</td>
+                                    <td>
+                                        <Moment format="LLL">
+                                            {employee.user?.created_at}
+                                        </Moment>
+                                    </td>
+                                    <td>
+                                        <Moment format="LLL">
+                                            {employee.user?.updated_at}
+                                        </Moment>
+                                    </td>
                                     <td>
                                         <div className="dropdown">
                                             <button
@@ -92,7 +102,7 @@ const UserListPage = () => {
                                                         className="dropdown-item text-default"
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#modalEditUser"
-                                                        onClick={(e) => setUSerSelected(user.id)}
+                                                        onClick={(e) => setUSerSelected(employee.id)}
                                                     >
                                                         Editar usuario
                                                     </button>
@@ -102,7 +112,7 @@ const UserListPage = () => {
                                                         className="dropdown-item text-danger"
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#modalDeleteUser"
-                                                        onClick={(e) => setUSerSelected(user.id)}
+                                                        onClick={(e) => setUSerSelected(employee.id)}
                                                     >
                                                         Eliminar usuario
                                                     </button>

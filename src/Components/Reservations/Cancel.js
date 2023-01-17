@@ -1,17 +1,17 @@
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import { getReservation, payReservation } from "../../Services/reservationServices";
+import { cancelReservation, getReservation, payReservation } from "../../Services/reservationServices";
 import Modal from "../Shared/Modal";
 
 import useAuth from "../../Hooks/UseAuth";
 import { PRINT_RESVERATION_OUT_ROUTE } from "../../Routes/config";
 
-const ReservationPayModal = ({reservationId, onPaid, ...rest}) => {
+const ReservationCancelModal = ({reservationId, onCanceled, ...rest}) => {
 
     const [reservation, setReservation] = useState({});
     const [isLoading, setIsLoasing] = useState(false);
-    const [isPaid, setIsPaid] = useState(false);
+    const [isCanceled, setIsCanceled] = useState(false);
 
     const [errors, setErrors] = useState([]);
 
@@ -19,7 +19,7 @@ const ReservationPayModal = ({reservationId, onPaid, ...rest}) => {
 
     const {userLogged} = useAuth();
 
-    const handlePayReservation = async (e) => {
+    const handleCancelReservation = async (e) => {
 
         console.log(e);
         e.preventDefault();
@@ -27,46 +27,45 @@ const ReservationPayModal = ({reservationId, onPaid, ...rest}) => {
         setIsLoasing(true);
         
         try{
-            const response = await payReservation(reservationId);
-            onPaid(true);
-            setIsPaid(true);
+            const response = await cancelReservation(reservationId);
+            onCanceled(true);
+            setIsCanceled(true);
             setIsLoasing(false);
         }catch(err){
             setIsLoasing(false);
-            setIsPaid(false);
-            onPaid(false);
+            setIsCanceled(false);
+            onCanceled(false);
 
         }
     }
 
     return (
         <Modal
-            title={"Pagar reserva"}
+            title={"Cancelar reserva"}
             modalSize=""
             {...rest}
         >
-            {isPaid ? (
+            {isCanceled ? (
                 <>
                     <div className="alert alert-success" role="alert">
-                        Cobro efectuado con exito
+                        Se cancelo la reserva
                     </div>
                     <div className="d-grip">
-                        <a 
-                            className="btn btn-primary"
-                            href={PRINT_RESVERATION_OUT_ROUTE(reservationId, userLogged.id)}
-                            target={"_blank"}
+                    <button 
+                            type='button'
+                            className='btn btn-default'
+                            data-bs-dismiss="modal"
                         >
-                            <FontAwesomeIcon icon={faPrint} className="me-2" />
-                            <span>Imprimir recibo</span>
-                        </a>
+                            Cerrar
+                        </button>
                     </div>
                 </>
             ):(
                 <form
-                    onSubmit={(e) => handlePayReservation(e)}
+                    onSubmit={(e) => handleCancelReservation(e)}
                 >
                     <div className="alert alert-primary" role="alert">
-                        ¿Por favor comfirmar para efectuar el pago de la reserva?
+                        ¿Por favor comfirmar para cancelar la reserva?
                     </div>   
                     <div className="d-grid gap-2">
                         <button 
@@ -74,7 +73,7 @@ const ReservationPayModal = ({reservationId, onPaid, ...rest}) => {
                             className="btn btn-primary"
                             disabled={isLoading}
                         >
-                            {isLoading ? 'Cobrando': 'Cobrar'} reserva
+                            {isLoading ? 'Cancelando': 'Cancelar'} reserva
                         </button>
                         <button 
                             type='button'
@@ -90,4 +89,4 @@ const ReservationPayModal = ({reservationId, onPaid, ...rest}) => {
     );
 }
 
-export default ReservationPayModal;
+export default ReservationCancelModal;
